@@ -1,50 +1,59 @@
-// index.js (File Utama)
+require("dotenv").config(); // Pastikan ini ada di baris pertama
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const PORT = process.env.PORT || 3000;
+const path = require("path");
 const responseHandler = require("./middleware/responseHandler");
 const globalErrorHandler = require("./middleware/errorHandler");
-const path = require("path");
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",");
+const PORT = process.env.PORT || 3000;
+
+// Daftar origin yang diizinkan (Frontend URL)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [])
+];
+
 const corsOptions = {
-  // origin: menentukan URL mana yang boleh request
   origin: function (origin, callback) {
-    // Izinkan jika (origin ada di daftar) ATAU (jika 'origin' undefined, cth: request dari Postman)
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    // Izinkan jika origin ada di daftar allowedOrigins atau jika tidak ada origin (spt Postman/Server-to-Server)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error("Origin not allowed by CORS"));
+      console.error("CORS Blocked Origin:", origin); // Log untuk debugging
+      callback(new Error("Not allowed by CORS"));
     }
   },
-
-  // credentials: true WAJIB ada agar browser mau
-  // mengirim HttpOnly Cookie (token JWT kita)
-  credentials: true,
+  credentials: true, // Wajib true agar cookie/token bisa dikirim/diterima
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// 1. PENTING: Middleware untuk membaca JSON (req.body)
+// Middleware
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Terapkan CORS sebelum route lain
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(responseHandler);
 
-// 2. Import Router Utama
+// Import Router Utama
 const mainRouter = require("./routes/index");
 
-// 3. Daftarkan Router Utama dengan prefix /api/v1
+// Daftarkan Router Utama
 app.use("/api/v1", mainRouter);
 
-// 4. Root endpoint untuk tes
+// Root endpoint
 app.get("/", (req, res) => {
-  res.send("API Exaque v1.0");
+  res.send("API Exaque v1.0 is running...");
 });
+
+// Error Handler Terakhir
 app.use(globalErrorHandler);
-// 5. Jalankan server
+
+// Jalankan server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
