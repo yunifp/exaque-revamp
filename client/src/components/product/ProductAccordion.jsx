@@ -61,7 +61,7 @@ const accordionData = [
         </p>
         {/* --- MODIFIKASI: list-inside diubah ke list-outside pl-5 --- */}
         <ul className="list-disc list-outside pl-5 space-y-2">
-          <li>Penjadwalan layanan mandiri</li>
+          <li>Pemesanan layanan <i>multiple</i></li>
           <li>Konfirmasi dan pengingat otomatis</li>
           <li>Sesuaikan halaman pemesanan Anda dengan warna dan logo</li>
           <li>Dukungan multi-bahasa</li>
@@ -104,7 +104,7 @@ const accordionData = [
       <>
         <p className="mb-4">
           Pilih data yang paling sesuai untuk membantu Anda tetap fleksibel. Dari
-          analisis real-time hingga analitik historis, sesuaikan dashboard Anda
+          analisis <i>real-time</i> hingga analitik historis, sesuaikan dashboard Anda
           agar dapat memengaruhi operasi saat ini dengan cara yang paling
           efektif.
         </p>
@@ -163,7 +163,7 @@ function ProductAccordion() {
           <p className="text-lg text-gray-600">
             Exaque melalui Qmatic adalah ekosistem terpadu yang dirancang untuk
             mengelola seluruh spektrum layanan Anda, mulai dari penjadwalan
-            janji temu yang kompleks hingga alur antrean walk-in yang dinamis.
+            janji temu yang kompleks hingga alur antrean <i>walk-in</i> yang dinamis.
           </p>
         </div>
 

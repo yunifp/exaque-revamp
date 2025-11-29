@@ -34,7 +34,7 @@ const AdminNavbar = () => {
 
           {/* Nama & Chevron Icon */}
           <div className="flex items-center gap-2">
-            <span className="font-medium text-txt-primary text-sm">Admin</span>
+            <span className="font-medium text-txt-primary text-sm"></span>
             <img
               src={chevronIcon}
               alt="Dropdown"

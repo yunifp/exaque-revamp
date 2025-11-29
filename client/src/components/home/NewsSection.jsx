@@ -28,17 +28,17 @@ const newsData = [
 
 function NewsSection() {
   return (
-    <section className="bg-primary py-20 md:py-28">
+    <section className="bg-primary py-10 md:py-28">
       <div className="container mx-auto px-6">
         
         {/* Header */}
-        <div className="flex justify-between items-start mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-16 space-y-5">
           <h2 className="text-5xl md:text-6xl font-bold text-gray-800 leading-tight">
             Artikel Exaque
           </h2>
           <Link
             to="/berita"
-            className="inline-block flex-shrink-0 px-8 py-3 bg-accent text-white font-semibold rounded-2xl shadow-md hover:bg-accent-hover transition-colors"
+            className="inline-block flex-shrink-0 px-8 my-auto py-3 bg-accent text-white font-semibold rounded-2xl shadow-md hover:bg-accent-hover transition-colors"
           >
             Lihat Selengkapnya
           </Link>

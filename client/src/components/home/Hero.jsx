@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // Impor gambar hero Anda
-import heroImage from "../../assets/hero-1.jpg";
+import heroImage from "../../assets/hero-beranda.webp";
 
 function Hero() {
   // Semua 'const' untuk konten telah dihapus.

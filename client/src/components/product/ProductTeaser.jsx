@@ -20,7 +20,7 @@ function ProductTeaser() {
       <div className="grid md:grid-cols-2 gap-12 items-center">
         
         {/* Kolom Kiri: Teks */}
-        <div className="text-left">
+        <div className="text-left max">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-6">
             {title}
           </h2>

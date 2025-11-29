@@ -12,7 +12,7 @@ function AboutTeaser() {
 
   return (
     // Bagian utama, padding container
-    <section className="container mx-auto px-6 py-20 md:py-28">
+    <section className="container mx-auto px-6 py-10 md:py-28">
       {/* Bagian Atas: Grid 2 Kolom (TIDAK BERUBAH) */}
       <div className="grid md:grid-cols-2 gap-12 items-start mb-16">
         {/* Kolom Kiri: Judul */}

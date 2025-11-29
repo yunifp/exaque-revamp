@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { useAuth } from "../context/AuthContext";
-import LogoImage from "../assets/logo-red.svg"; // Pastikan path logo benar
+import LogoImage from "../assets/logo-red.svg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,16 +14,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Panggil API Login
       const response = await request("/auth/login", "POST", { email, password });
       
-      // Simpan data user ke Context
-      login(response.data.user);
-      
-      // Redirect ke Dashboard
-      navigate("/admin/dashboard");
+      if (response && response.data && response.data.user) {
+        login(response.data.user);
+        navigate("/admin/dashboard");
+      }
     } catch (err) {
-      // Error sudah ditangani oleh state 'error' dari hook
       console.error(err);
     }
   };
@@ -32,21 +29,18 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md border border-subtle">
         
-        {/* Logo Section */}
         <div className="text-center mb-8">
           <img src={LogoImage} alt="Exaque Logo" className="h-10 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-txt-primary">Admin Login</h1>
           <p className="text-txt-subtle text-sm">Masuk untuk mengelola dashboard</p>
         </div>
 
-        {/* Error Alert */}
         {error && (
           <div className="bg-red-50 text-accent text-sm p-3 rounded-lg mb-6 border border-red-100 text-center">
             {error}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-semibold text-txt-primary mb-2">Email</label>
@@ -95,4 +89,4 @@ const Login = () => {
   );
 };
 
-export default Login;   
+export default Login;

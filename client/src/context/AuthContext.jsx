@@ -8,13 +8,15 @@ export const AuthProvider = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const { request } = useApi();
 
-  // Cek apakah user sudah login saat aplikasi pertama kali dimuat (refresh page)
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       try {
-        // Endpoint ini harus ada di backend (authRoutes.js -> /me)
         const response = await request("/auth/me");
-        setUser(response.data.user);
+        if (response && response.data && response.data.user) {
+          setUser(response.data.user);
+        } else {
+          setUser(null);
+        }
       } catch (error) {
         setUser(null);
       } finally {
@@ -33,7 +35,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await request("/auth/logout", "POST");
       setUser(null);
-      // Opsional: Redirect atau reload
       window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed", error);
@@ -42,8 +43,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isInitialized }}>
-      {/* Jangan render anak sampai cek login selesai agar tidak flicker */}
-      {isInitialized ? children : <div className="h-screen flex items-center justify-center">Loading...</div>}
+      {isInitialized ? children : null}
     </AuthContext.Provider>
   );
 };

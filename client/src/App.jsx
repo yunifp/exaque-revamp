@@ -17,6 +17,13 @@ import TampilanPapanInformasiDigital from "./pages/TampilanPapanInformasiDigital
 import PengumumanSuaraOtomatis from "./pages/PengumumanSuaraOtomatis";
 import DukunganPerangkatLunak from "./pages/DukunganPerangkatLunak";
 
+import KisahPelanggan from "./pages/kisahpelangganpage";
+import DetailKisahPelanggan from "./pages/DetailKisahPelanggan";
+import Faq from "./pages/Faq";
+import BlogPage from "./pages/BlogPage";
+import DetailBlog from "./pages/DetailBlog";
+
+// Frontend-specific pages
 import Solusi from "./pages/Solution";
 import ManajemenAntrean from "./pages/ManajemenAntrean";
 import ManajemenPerjalananPelanggan from "./pages/ManajemenPerjalananPelanggan";
@@ -33,7 +40,7 @@ import Dashboard from "./components/admin/dashboard";
 import Artikel from "./pages/admin/Artikel";
 import ArtikelForm from "./pages/admin/ArtikelForm";
 import KisahPelangganForm from "./pages/admin/KisahPelangganForm";
-import KisahPelanggan from "./pages/admin/KisahPelanggan";
+import AdminKisahPelanggan from "./pages/admin/KisahPelanggan";
 import PermintaanPelanggan from "./pages/admin/PermintaanPelanggan";
 
 const ScrollToTop = ({ children }) => {
@@ -95,6 +102,11 @@ const App = () => {
               <Route path="/antrean-virtual" element={<AntreanVirtual />} />
               <Route path="/rapat-virtual" element={<RapatVirtual />} />
               <Route path="/integrasi" element={<Integrasi />} />
+              <Route path="/Kisah-pelanggan" element={<KisahPelanggan />} />
+              <Route path="/kisah-pelanggan/:id" element={<DetailKisahPelanggan />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<DetailBlog />} />
+              <Route path="/faq" element={<Faq />} />
             </Route>
 
             <Route element={<GuestRoute />}>
