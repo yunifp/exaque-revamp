@@ -11,20 +11,20 @@ const useApi = () => {
     setError(null);
 
     try {
-      const headers = {
-        "Content-Type": "application/json",
-      };
-
-      const config = {
+      const headers = {};
+      let config = {
         method,
-        headers,
-        // PENTING: credentials 'include' agar cookie token dikirim/diterima
-        credentials: "include", 
+        credentials: "include",
       };
 
-      if (body) {
+      if (body instanceof FormData) {
+        config.body = body;
+      } else if (body) {
+        headers["Content-Type"] = "application/json";
         config.body = JSON.stringify(body);
       }
+
+      config.headers = headers;
 
       const response = await fetch(`${BASE_URL}${endpoint}`, config);
       const data = await response.json();
@@ -38,7 +38,7 @@ const useApi = () => {
     } catch (err) {
       setLoading(false);
       setError(err.message);
-      throw err; // Lempar error agar bisa ditangkap di component
+      throw err;
     }
   }, []);
 

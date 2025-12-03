@@ -1,58 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DataTable from "../../components/admin/datatable";
 import { useNavigate } from "react-router-dom";
+import useApi from "../../hooks/useApi";
 
-// --- Mock Data ---
-const initialArticles = [
-  { id: 1, title: "Tata Cara Manajemen Waktu", author: "admin", date: "2023-10-01", status: "Published", views: 120, image: "https://placehold.co/100x100/png?text=Img" },
-  { id: 2, title: "Pentingnya Keamanan Cyber", author: "admin", date: "2023-10-05", status: "Draft", views: 0, image: "https://placehold.co/100x100/png?text=Img" },
-  { id: 3, title: "Tips Produktivitas Tim", author: "admin", date: "2023-09-20", status: "Published", views: 340, image: "https://placehold.co/100x100/png?text=Img" },
-  // ... data lainnya
-];
+const BASE_URL = import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '');
 
 const Artikel = () => {
-  const [articles, setArticles] = useState(initialArticles);
+  const [articles, setArticles] = useState([]);
+  const { request } = useApi();
+  const navigate = useNavigate();
 
-  // --- Definisi Kolom ---
+  const fetchArticles = async () => {
+    try {
+      const response = await request("/articles?limit=100"); 
+      if (response.data && response.data.data) {
+        setArticles(response.data.data);
+      }
+    } catch (error) {
+      console.error("Gagal mengambil artikel:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchArticles();
+  }, [request]);
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus artikel ini?")) {
+      try {
+        await request(`/articles/${id}`, "DELETE");
+        setArticles(articles.filter((a) => a.id !== id));
+      } catch (error) {
+        alert("Gagal menghapus artikel: " + error.message);
+      }
+    }
+  };
+
+  const handleAdd = () => navigate("/admin/artikel/tambah");
+  const handleEdit = (item) => navigate(`/admin/artikel/edit/${item.id}`);
+  
+  const handleRowClick = (item) => {
+    navigate(`/admin/artikel/preview/${item.id}`);
+  };
+
   const columns = [
     {
       header: "Artikel",
       accessor: "title",
-      // Custom Render untuk menampilkan Gambar + Judul
-      render: (item) => (
-        <div className="flex items-center gap-4">
-          <img src={item.image} alt={item.title} className="w-12 h-12 rounded-lg object-cover bg-gray-200" />
-          <div>
-            <p className="font-semibold text-txt-primary line-clamp-1">{item.title}</p>
-            <p className="text-xs text-txt-subtle mt-0.5">{item.views}x Dilihat</p>
+      render: (item) => {
+        const imageUrl = item.featured_image_url 
+          ? `${BASE_URL}${item.featured_image_url}` 
+          : "https://placehold.co/100x100/png?text=No+Image";
+          
+        return (
+          <div 
+            className="flex items-center gap-4 cursor-pointer"
+            onClick={(e) => { e.stopPropagation(); handleRowClick(item); }}
+          >
+            <img 
+              src={imageUrl} 
+              alt={item.title} 
+              className="w-12 h-12 rounded-lg object-cover bg-gray-200" 
+            />
+            <div>
+              <p className="font-semibold text-txt-primary line-clamp-1 hover:text-accent transition-colors">{item.title}</p>
+              <p className="text-xs text-txt-subtle mt-0.5">{item.slug}</p>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
-    { header: "Penulis", accessor: "author" },
-    { header: "Tanggal", accessor: "date" },
+    { 
+      header: "Penulis", 
+      accessor: "author",
+      render: (item) => item.author ? item.author.name : "Admin"
+    },
+    { 
+      header: "Tanggal", 
+      accessor: "createdAt",
+      render: (item) => new Date(item.createdAt).toLocaleDateString()
+    },
     {
       header: "Status",
       accessor: "status",
-      // Custom Render untuk Badge Status
       render: (item) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-          ${item.status === "Published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
+          ${item.status === "published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
           {item.status}
         </span>
       ),
     },
   ];
 
-  // --- Handlers ---
-  const handleDelete = (id) => {
-    if (window.confirm("Hapus artikel ini?")) {
-      setArticles(articles.filter((a) => a.id !== id));
-    }
-  };
-  const navigate = useNavigate();
-  const handleAdd = () => navigate("/admin/artikel/tambah");
-  const handleEdit = (item) => navigate(`/admin/artikel/edit/${item.id}`);
   return (
     <DataTable
       title="Manajemen Artikel"

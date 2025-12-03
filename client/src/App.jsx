@@ -23,7 +23,6 @@ import Faq from "./pages/Faq";
 import BlogPage from "./pages/BlogPage";
 import DetailBlog from "./pages/DetailBlog";
 
-// Frontend-specific pages
 import Solusi from "./pages/Solution";
 import ManajemenAntrean from "./pages/ManajemenAntrean";
 import ManajemenPerjalananPelanggan from "./pages/ManajemenPerjalananPelanggan";
@@ -39,31 +38,20 @@ import AdminLayout from "./pages/admin/Admin";
 import Dashboard from "./components/admin/dashboard";
 import Artikel from "./pages/admin/Artikel";
 import ArtikelForm from "./pages/admin/ArtikelForm";
+import ArtikelPreview from "./pages/admin/ArtikelPreview";
 import KisahPelangganForm from "./pages/admin/KisahPelangganForm";
 import AdminKisahPelanggan from "./pages/admin/KisahPelanggan";
 import PermintaanPelanggan from "./pages/admin/PermintaanPelanggan";
 
 const ScrollToTop = ({ children }) => {
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return children;
 };
 
-const MainLayout = () => {
-  return (
-    <>
-      <Navbar />
-      <main>
-        <Outlet />
-      </main>
-      <Footer />
-    </>
-  );
-};
+const MainLayout = () => (
+  <> <Navbar /> <main> <Outlet /> </main> <Footer /> </>
+);
 
 const ProtectedRoute = () => {
   const { user } = useAuth();
@@ -117,12 +105,16 @@ const App = () => {
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Navigate to="/admin/dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} />
+                
                 <Route path="artikel" element={<Artikel />} />
                 <Route path="artikel/tambah" element={<ArtikelForm />} />
                 <Route path="artikel/edit/:id" element={<ArtikelForm />} />
-                <Route path="kisah-pelanggan" element={<KisahPelanggan />} />
+                <Route path="artikel/preview/:id" element={<ArtikelPreview />} />
+
+                <Route path="kisah-pelanggan" element={<AdminKisahPelanggan />} />
                 <Route path="kisah-pelanggan/tambah" element={<KisahPelangganForm />} />
                 <Route path="kisah-pelanggan/edit/:id" element={<KisahPelangganForm />} />
+                
                 <Route path="permintaan-demo" element={<PermintaanPelanggan />} />
               </Route>
             </Route>
